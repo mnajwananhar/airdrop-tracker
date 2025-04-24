@@ -24,3 +24,55 @@ body {
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
 }
+
+/* Custom scrollbar styling */
+.scrollbar-container {
+  scrollbar-width: thin;
+  scrollbar-color: #4b5563 #1f2937;
+}
+
+.scrollbar-container::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+.scrollbar-container::-webkit-scrollbar-track {
+  background: #1f2937;
+  border-radius: 4px;
+}
+
+.scrollbar-container::-webkit-scrollbar-thumb {
+  background: #4b5563;
+  border-radius: 4px;
+}
+
+.scrollbar-container::-webkit-scrollbar-thumb:hover {
+  background: #6b7280;
+}
+
+/* Notification container styles */
+.notification-container {
+  position: fixed;
+  bottom: 20px;
+  right: 20px;
+  z-index: 1000;
+  width: 320px;
+  max-width: 85vw;
+  display: flex;
+  flex-direction: column;
+  pointer-events: none;
+}
+
+/* Responsive styling for notifications */
+@media screen and (max-width: 640px) {
+  .notification-container {
+    bottom: 10px;
+    right: 10px;
+    width: calc(100% - 20px);
+    max-width: calc(100% - 20px);
+  }
+}
+
+.notification-container > * {
+  pointer-events: auto;
+}
