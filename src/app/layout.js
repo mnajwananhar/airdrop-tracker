@@ -2,6 +2,7 @@ import "./globals.css";
 import { AuthProvider } from "../contexts/AuthContext";
 import { NotificationProvider } from "../contexts/NotificationContext";
 import { Balloon } from "../components/Header";
+import { Analytics } from "@vercel/analytics/react";
 
 export const metadata = {
   title: "Airdrop Tracker",
@@ -40,6 +41,7 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <NotificationProvider>
             <main className="min-h-screen">{children}</main>
+            <Analytics />
           </NotificationProvider>
         </AuthProvider>
       </body>
