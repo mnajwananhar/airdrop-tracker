@@ -174,10 +174,8 @@ export async function deleteProject(projectId) {
       throw new Error("Project not found");
     }
 
-    await updateDoc(projectRef, {
-      isDeleted: true,
-      deletedAt: serverTimestamp(),
-    });
+    // Perform a hard delete instead of a soft delete
+    await deleteDoc(projectRef);
 
     return true;
   } catch (error) {

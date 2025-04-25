@@ -154,7 +154,7 @@ export async function DELETE(request, { params }) {
     await deleteProject(id);
     return NextResponse.json({
       success: true,
-      message: "Project has been soft deleted",
+      message: "Project has been permanently deleted",
     });
   } catch (error) {
     const id = params ? (await params).id : "unknown";
