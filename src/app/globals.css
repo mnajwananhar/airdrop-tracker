@@ -23,17 +23,27 @@ body {
   background: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  -webkit-tap-highlight-color: transparent; /* Menghilangkan highlight tap di mobile */
+  overscroll-behavior: none; /* Mencegah scroll bouncing di iOS */
 }
 
 /* Custom scrollbar styling */
 .scrollbar-container {
   scrollbar-width: thin;
   scrollbar-color: #4b5563 #1f2937;
+  -webkit-overflow-scrolling: touch; /* Smooth scrolling di iOS */
 }
 
 .scrollbar-container::-webkit-scrollbar {
-  width: 8px;
-  height: 8px;
+  width: 6px; /* Lebih kecil di mobile */
+  height: 6px;
+}
+
+@media (min-width: 768px) {
+  .scrollbar-container::-webkit-scrollbar {
+    width: 8px; /* Lebih besar di desktop */
+    height: 8px;
+  }
 }
 
 .scrollbar-container::-webkit-scrollbar-track {
@@ -63,6 +73,318 @@ body {
   pointer-events: none;
 }
 
+/* Fix untuk input dan textarea saat focus */
+input:focus,
+textarea:focus {
+  margin-left: 0 !important;
+  padding-left: 0.75rem !important;
+  text-indent: 0 !important;
+  overflow: auto !important;
+  text-overflow: clip !important;
+  outline: none !important;
+}
+
+/* Perbaikan spesifik untuk input dan textarea di modal */
+.fixed.inset-0 input,
+.fixed.inset-0 textarea {
+  width: 100% !important;
+  overflow: visible !important;
+  text-overflow: ellipsis !important;
+  box-sizing: border-box !important;
+}
+
+/* Pastikan focus ring terlihat dengan baik */
+.fixed.inset-0 input:focus,
+.fixed.inset-0 textarea:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5) !important;
+  border-color: #2563eb !important;
+}
+
+/* Fix untuk container input */
+.fixed.inset-0 .bg-gray-800 {
+  overflow: visible !important;
+}
+
+/* Pastikan nilai input terlihat penuh */
+.fixed.inset-0 textarea,
+.fixed.inset-0 input[type="text"] {
+  padding: 0.5rem 0.75rem !important;
+  min-width: 100% !important;
+}
+
+/* Ensure search icon stays inside input */
+.search-container {
+  position: relative;
+  width: 100%;
+  overflow: visible !important;
+}
+
+.search-icon {
+  position: absolute;
+  top: 50%;
+  left: 12px;
+  transform: translateY(-50%);
+  pointer-events: none;
+  z-index: 10;
+  display: flex; /* Ensure proper icon rendering */
+  align-items: center;
+  justify-content: center;
+}
+
+.search-input {
+  width: 100%;
+  padding-left: 40px !important; /* Ensure space for the icon */
+  padding-right: 36px !important; /* Space for clear button */
+  height: 40px;
+  background-color: #1f2937; /* gray-800 */
+  border: 1px solid #374151; /* gray-700 */
+  border-radius: 0.5rem;
+  color: white;
+  font-size: 14px; /* Ensure text is properly sized */
+  line-height: 1.5;
+  text-indent: 0 !important; /* Prevent text from overlapping with the icon */
+}
+
+/* Specifically target search-input when focused to override any other focus styles */
+input.search-input:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  border-color: #3b82f6; /* blue-500 */
+  padding-left: 40px !important; /* Maintain left padding when focused */
+  text-indent: 0 !important;
+  margin-left: 0 !important;
+  overflow: visible !important;
+}
+
+/* Style for the clear button, make sure it's only visible when there's search text */
+.search-clear-button {
+  position: absolute;
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  background: none;
+  border: none;
+  color: #9ca3af; /* gray-400 */
+  cursor: pointer;
+  padding: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 20;
+}
+
+/* Hide the clear button explicitly when input is empty (just in case) */
+.search-input:placeholder-shown + .search-clear-button {
+  display: none !important;
+}
+
+/* Fix for positioning in different layouts */
+.grid-layout .search-container {
+  width: 100%;
+  height: 40px;
+}
+
+/* Fix for possible overflow issues */
+.navigation-container {
+  overflow: visible;
+}
+
+/* Floating animation for elements */
+@keyframes float {
+  0% {
+    transform: translateY(0px);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+  100% {
+    transform: translateY(0px);
+  }
+}
+
+.animate-float {
+  animation: float 6s ease-in-out infinite;
+}
+
+/* Slow pulse animation */
+@keyframes pulse-slow {
+  0%,
+  100% {
+    opacity: 0.5;
+  }
+  50% {
+    opacity: 0.2;
+  }
+}
+
+.animate-pulse-slow {
+  animation: pulse-slow 8s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+
+.delay-1000 {
+  animation-delay: 1000ms;
+}
+
+.delay-2000 {
+  animation-delay: 2000ms;
+}
+
+/* Page transition animations */
+.page-enter {
+  opacity: 0;
+  transform: translateY(20px);
+}
+
+.page-enter-active {
+  opacity: 1;
+  transform: translateY(0);
+  transition: opacity 300ms, transform 300ms;
+}
+
+.page-exit {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.page-exit-active {
+  opacity: 0;
+  transform: translateY(-20px);
+  transition: opacity 300ms, transform 300ms;
+}
+
+/* Gradient hover effects */
+.gradient-border-hover {
+  position: relative;
+  transition: all 0.3s;
+}
+
+.gradient-border-hover::before {
+  content: "";
+  position: absolute;
+  top: -2px;
+  left: -2px;
+  right: -2px;
+  bottom: -2px;
+  background: linear-gradient(45deg, #60a5fa, #a78bfa);
+  border-radius: inherit;
+  z-index: -1;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.gradient-border-hover:hover::before {
+  opacity: 1;
+}
+
+/* Glassmorphism styles */
+.glass {
+  background: rgba(17, 24, 39, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.glass-card {
+  background: rgba(31, 41, 55, 0.5);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  border: 1px solid rgba(55, 65, 81, 0.5);
+  border-radius: 0.75rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1),
+    0 2px 4px -1px rgba(0, 0, 0, 0.06);
+}
+
+/* Form dan Input Classes */
+.form-field {
+  position: relative;
+  margin-bottom: 1rem;
+}
+
+.input-container {
+  position: relative;
+  width: 100%;
+  overflow: visible !important;
+}
+
+.input-field {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  background-color: #1f2937;
+  border: 1px solid #374151;
+  border-radius: 0.5rem;
+  padding: 0.625rem 0.75rem;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.2s ease;
+}
+
+.input-field:focus {
+  outline: none;
+  border-color: #3b82f6;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25);
+  background-color: #111827;
+}
+
+/* Prioritas tinggi untuk mengatasi masalah input focus */
+input.input-field:focus,
+textarea.input-field:focus {
+  border-width: 2px !important;
+  border-style: solid !important;
+  border-color: #3b82f6 !important;
+  margin: 0 !important;
+  padding-left: 0.75rem !important;
+  padding-right: 0.75rem !important;
+  transform: none !important;
+  left: 0 !important;
+  right: 0 !important;
+  max-width: 100% !important;
+  min-width: 100% !important;
+  box-sizing: border-box !important;
+  text-indent: 0 !important;
+  position: relative !important;
+  background-color: #1f2937 !important;
+}
+
+/* Pastikan konten textarea selalu terlihat utuh */
+textarea.input-field {
+  white-space: pre-wrap !important;
+  overflow-wrap: break-word !important;
+  resize: none !important; /* Mencegah resize manual */
+  min-height: 80px !important;
+}
+
+/* Fix untuk iOS */
+@supports (-webkit-touch-callout: none) {
+  input.input-field,
+  textarea.input-field {
+    font-size: 16px !important; /* Mencegah zoom otomatis pada iOS */
+  }
+
+  /* Mencegah scrolling pada container utama saat modal terbuka di iOS */
+  body:has(.fixed.inset-0) {
+    position: fixed;
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+  }
+}
+
+/* Optimasi tambahan untuk mobile */
+@media (max-width: 480px) {
+  .input-field {
+    font-size: 16px !important;
+    padding: 0.5rem 0.75rem !important;
+  }
+
+  /* Perbaikan untuk MultiSelect saat focus */
+  .fixed.inset-0 .relative button:focus {
+    outline: none !important;
+    border-color: #3b82f6 !important;
+    box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.25) !important;
+  }
+}
+
 /* Responsive styling for notifications */
 @media screen and (max-width: 640px) {
   .notification-container {
@@ -73,6 +395,363 @@ body {
   }
 }
 
-.notification-container > * {
-  pointer-events: auto;
+/* Responsive card styling untuk item project */
+@media screen and (max-width: 480px) {
+  /* Mengurangi padding pada card di mobile */
+  .bg-gray-800\/30,
+  .bg-gray-800\/50 {
+    padding: 10px !important;
+  }
+
+  /* Fix scroll container di viewport mobile */
+  [ref="scrollContainerRef"] {
+    max-height: calc(70vh - 30px) !important;
+    padding-right: 5px !important;
+    margin-right: -2px !important;
+  }
+
+  /* Ukuran tombol yang lebih kecil di mobile */
+  button[title] {
+    transform: scale(0.9);
+  }
+
+  /* Fix untuk badge text yang kadang terpotong */
+  .rounded-full {
+    white-space: nowrap;
+  }
+}
+
+/* Fix height untuk mobile viewports */
+@media screen and (max-height: 667px) {
+  [ref="scrollContainerRef"] {
+    max-height: calc(60vh - 20px) !important;
+  }
+}
+
+/* Mencegah konten overflow horizontal pada container */
+.overflow-visible {
+  overflow-x: visible;
+  overflow-y: visible;
+}
+
+/* Memastikan konten truncate bekerja dengan benar */
+.truncate {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  max-width: 100%;
+}
+
+/* Modal responsif styling */
+/* Fiksasi untuk scroll modal pada iOS */
+.fixed.inset-0.overflow-y-auto {
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Memastikan modal content selalu muat di layar kecil */
+@media screen and (max-width: 480px) {
+  /* Mengurangi padding pada modal di mobile */
+  .fixed.inset-0 .bg-gray-900 {
+    padding: 16px !important;
+  }
+
+  /* Adjust font sizes for modal content */
+  .fixed.inset-0 h2 {
+    font-size: 1.25rem !important;
+  }
+
+  .fixed.inset-0 h3 {
+    font-size: 1.1rem !important;
+  }
+
+  .fixed.inset-0 input,
+  .fixed.inset-0 textarea,
+  .fixed.inset-0 button,
+  .fixed.inset-0 .text-sm {
+    font-size: 0.875rem !important;
+  }
+
+  /* Mengurangi padding pada tombol di modal */
+  .fixed.inset-0 button {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+    padding-top: 8px !important;
+    padding-bottom: 8px !important;
+  }
+
+  /* Adjust margin for modal elements */
+  .fixed.inset-0 .mb-6 {
+    margin-bottom: 1rem !important;
+  }
+
+  /* Memastikan textarea tidak terlalu tinggi di mobile */
+  .fixed.inset-0 textarea {
+    max-height: 100px !important;
+  }
+}
+
+/* Optimasi untuk layar sangat kecil */
+@media screen and (max-width: 360px) {
+  .fixed.inset-0 .max-w-md {
+    width: 100% !important;
+    margin-left: 8px !important;
+    margin-right: 8px !important;
+  }
+
+  /* Mengatur button spacing lebih kecil */
+  .fixed.inset-0 .space-x-3 {
+    gap: 0.5rem !important;
+  }
+
+  /* Mengurangi icon size */
+  .fixed.inset-0 svg {
+    width: 18px !important;
+    height: 18px !important;
+  }
+
+  /* Filter badge */
+  .filter-badge {
+    max-width: 80px;
+  }
+}
+
+/* Modal Content Scroll Enhancement */
+.fixed.inset-0 .scrollbar-container {
+  overflow-y: auto !important;
+  -webkit-overflow-scrolling: touch !important;
+}
+
+/* Filter badge container */
+.filter-badges-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  max-width: 100%;
+  overflow: hidden;
+}
+
+/* Improved filter badge styles */
+.filter-badge-container {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.25rem;
+  overflow: hidden;
+  max-width: 100%;
+}
+
+/* Counter badge styles */
+.filter-counter {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background-color: #374151; /* gray-700 */
+  color: #d1d5db; /* gray-300 */
+  font-size: 0.75rem;
+  line-height: 1rem;
+  padding: 0.125rem 0.5rem;
+  border-radius: 9999px;
+  font-weight: 500;
+}
+
+/* Adjust filter container layout */
+.filter-container {
+  position: relative;
+  width: 100%;
+}
+
+/* Make sure filter badges don't overflow */
+.filter-badge {
+  display: inline-flex;
+  align-items: center;
+  background-color: rgba(55, 65, 81, 0.5);
+  border-radius: 9999px;
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 90px;
+}
+
+@media (min-width: 640px) {
+  .filter-badge {
+    max-width: 120px;
+    font-size: 0.875rem;
+  }
+}
+
+/* Fix grid layout for filter controls */
+.filter-controls-grid {
+  display: grid;
+  grid-template-columns: repeat(12, minmax(0, 1fr));
+  gap: 0.5rem;
+}
+
+.filter-controls-grid .search-col {
+  grid-column: span 12 / span 12;
+}
+
+.filter-controls-grid .sort-col {
+  grid-column: span 4 / span 4;
+}
+
+.filter-controls-grid .filter-col {
+  grid-column: span 8 / span 8;
+}
+
+@media (min-width: 640px) {
+  .filter-controls-grid .search-col {
+    grid-column: span 7 / span 7;
+  }
+
+  .filter-controls-grid .sort-col {
+    grid-column: span 2 / span 2;
+  }
+
+  .filter-controls-grid .filter-col {
+    grid-column: span 3 / span 3;
+  }
+}
+
+/* Enhance dropdown appearance */
+.filter-dropdown {
+  position: absolute;
+  z-index: 50;
+  width: 100%;
+  max-height: 15rem;
+  overflow-y: auto;
+  background-color: #1f2937; /* gray-800 */
+  border: 1px solid #374151; /* gray-700 */
+  border-radius: 0.5rem;
+  box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1),
+    0 4px 6px -2px rgba(0, 0, 0, 0.05);
+  margin-top: 0.5rem;
+}
+
+/* Fix dropdown option items */
+.filter-option {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+}
+
+.filter-option:hover {
+  background-color: #374151; /* gray-700 */
+}
+
+.filter-option-selected {
+  background-color: rgba(59, 130, 246, 0.1); /* blue-600 with 10% opacity */
+}
+
+/* Make MultiSelect button look consistent */
+.multiselect-button {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  background-color: #1f2937; /* gray-800 */
+  border: 1px solid #374151; /* gray-700 */
+  border-radius: 0.5rem;
+  padding: 0.5rem 1rem;
+  color: white;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.multiselect-button:hover {
+  background-color: #374151; /* gray-700 */
+}
+
+.multiselect-button:focus {
+  outline: none;
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5);
+  border-color: #3b82f6; /* blue-500 */
+}
+
+/* Styling for filter badge items */
+.filter-badge {
+  display: flex;
+  align-items: center;
+  border-radius: 9999px; /* full */
+  padding: 0.125rem 0.5rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  font-weight: 500;
+  max-width: 100px;
+}
+
+@media (min-width: 640px) {
+  .filter-badge {
+    font-size: 0.875rem;
+    line-height: 1.25rem;
+    max-width: 120px;
+  }
+}
+
+/* Filter badge text should truncate */
+.filter-badge-text {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badge colors */
+.filter-badge-daily {
+  background-color: rgba(59, 130, 246, 0.5);
+  color: #93c5fd;
+}
+
+.filter-badge-testnet {
+  background-color: rgba(139, 92, 246, 0.5);
+  color: #c4b5fd;
+}
+
+.filter-badge-retro {
+  background-color: rgba(236, 72, 153, 0.5);
+  color: #f9a8d4;
+}
+
+.filter-badge-node {
+  background-color: rgba(34, 197, 94, 0.5);
+  color: #86efac;
+}
+
+.filter-badge-depin {
+  background-color: rgba(249, 115, 22, 0.5);
+  color: #fdba74;
+}
+
+.filter-badge-other {
+  background-color: rgba(75, 85, 99, 0.5);
+  color: #d1d5db;
+}
+
+.filter-badge-count {
+  background-color: rgba(75, 85, 99, 0.7);
+  color: #d1d5db;
+}
+
+/* Make sure dropdown doesn't get cut off */
+.multiselect-dropdown {
+  max-height: 240px;
+  overflow-y: auto;
+  z-index: 50;
+}
+
+/* Fix spesifik untuk modal notes overflow */
+.prose.prose-invert {
+  max-width: 100% !important;
+  overflow-wrap: break-word !important;
+  word-wrap: break-word !important;
+}
+
+/* Memastikan form sticky footer bekerja dengan baik */
+.sticky.bottom-0 {
+  background-color: #111827 !important; /* Memastikan background konsisten */
+  border-top: 1px solid #374151 !important;
+  padding-top: 0.75rem !important;
+  padding-bottom: 0.75rem !important;
+  z-index: 10 !important;
 }

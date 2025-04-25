@@ -7,7 +7,6 @@ const Toast = ({ id, message, type = "success", onClose }) => {
   const [isVisible, setIsVisible] = useState(false);
 
   useEffect(() => {
-    // Fade in animation
     const timer = setTimeout(() => {
       setIsVisible(true);
     }, 10);
@@ -20,13 +19,11 @@ const Toast = ({ id, message, type = "success", onClose }) => {
   const handleClose = () => {
     setIsVisible(false);
 
-    // Allow for fade out animation before completely removing
     setTimeout(() => {
       onClose(id);
     }, 300);
   };
 
-  // Determine icon and colors based on notification type
   const getToastStyles = () => {
     switch (type) {
       case "success":

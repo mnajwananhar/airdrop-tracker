@@ -1,8 +1,9 @@
 "use client";
 
-import { CheckSquare, Award, Search, Filter, X } from "lucide-react";
+import { CheckSquare, Award } from "lucide-react";
 import MultiSelect from "./MultiSelect";
 import SortButton from "./SortButton";
+import SearchBar from "./SearchBar";
 
 const Navigation = ({
   showCompleted,
@@ -15,82 +16,57 @@ const Navigation = ({
   sortDirection,
   setSortDirection,
 }) => {
-  // Handle filter toggle - multi-select implementation
-  const toggleFilter = (value) => {
-    if (activeFilters.includes(value)) {
-      // If value is already selected, remove it
-      setActiveFilters(activeFilters.filter((filter) => filter !== value));
-    } else {
-      // If value is not selected, add it
-      setActiveFilters([...activeFilters, value]);
-    }
-  };
-
   return (
-    <div className="flex flex-col mb-6 space-y-4">
+    <div className="flex flex-col mb-6 space-y-4 navigation-container">
       <div className="flex bg-gray-800 rounded-xl p-1">
         <button
-          className={`flex-1 py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center ${
+          className={`flex-1 py-2 px-3 sm:px-4 rounded-lg transition-all duration-200 flex items-center justify-center ${
             !showCompleted
               ? "bg-blue-600 text-white shadow-lg"
               : "hover:bg-gray-700"
           }`}
           onClick={() => setShowCompleted(false)}
         >
-          <CheckSquare size={18} className="mr-2" />
-          Active Tasks
+          <CheckSquare size={16} className="mr-1 sm:mr-2" />
+          <span className="text-sm sm:text-base">Active Tasks</span>
         </button>
         <button
-          className={`flex-1 py-2 px-4 rounded-lg transition-all duration-200 flex items-center justify-center ${
+          className={`flex-1 py-2 px-3 sm:px-4 rounded-lg transition-all duration-200 flex items-center justify-center ${
             showCompleted
               ? "bg-blue-600 text-white shadow-lg"
               : "hover:bg-gray-700"
           }`}
           onClick={() => setShowCompleted(true)}
         >
-          <Award size={18} className="mr-2" />
-          Completed
+          <Award size={16} className="mr-1 sm:mr-2" />
+          <span className="text-sm sm:text-base">Completed</span>
         </button>
       </div>
 
-      <div className="flex flex-wrap gap-2">
-        {/* Search Box */}
-        <div className="relative flex-1 min-w-[200px]">
-          <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-            <Search size={18} className="text-gray-500" />
-          </div>
-          <input
-            type="text"
+      <div className="grid grid-cols-12 gap-2 grid-layout">
+        <div className="col-span-12 sm:col-span-7">
+          <SearchBar
+            searchTerm={searchTerm}
+            setSearchTerm={setSearchTerm}
             placeholder="Search projects or links..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            className="w-full h-10 bg-gray-800 border border-gray-700 rounded-lg pl-10 pr-4 py-2 text-white focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
           />
-          {searchTerm && (
-            <button
-              onClick={() => setSearchTerm("")}
-              className="absolute inset-y-0 right-0 pr-3 flex items-center"
-            >
-              <X size={18} className="text-gray-500 hover:text-white" />
-            </button>
-          )}
         </div>
 
-        {/* Sort Button */}
-        <div className="w-[120px]">
+        <div className="col-span-4 sm:col-span-2">
           <SortButton
             sortDirection={sortDirection}
             setSortDirection={setSortDirection}
           />
         </div>
 
-        {/* Filter */}
-        <div className="w-[200px]">
+        <div className="col-span-8 sm:col-span-3">
           <MultiSelect
             options={typeOptions}
             selected={activeFilters}
             onChange={setActiveFilters}
             placeholder="Filter by type"
+            maxVisibleItems={2}
+            showBadgeCount={true}
           />
         </div>
       </div>

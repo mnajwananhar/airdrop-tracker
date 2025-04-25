@@ -20,7 +20,7 @@ import { createPortal } from "react-dom";
 const ActiveProjects = ({
   projects,
   filteredProjects,
-  toggleMark, // Updated function
+  toggleMark,
   toggleDropdown,
   activeDropdown,
   moveToCompleted,
@@ -31,7 +31,6 @@ const ActiveProjects = ({
   activeLinksDropdown,
   typeOptions = [],
 }) => {
-  // State declarations - all together at the top
   const [expandedLinkDropdowns, setExpandedLinkDropdowns] = useState({});
   const [optionsPosition, setOptionsPosition] = useState({
     top: 0,
@@ -46,21 +45,17 @@ const ActiveProjects = ({
   const [showDeleteModal, setShowDeleteModal] = useState(false);
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [modalProjectId, setModalProjectId] = useState(null);
-  const [isScrollLocked, setIsScrollLocked] = useState(false); // Add scroll lock state
+  const [isScrollLocked, setIsScrollLocked] = useState(false);
 
-  // Ref declarations
   const mainContainerRef = useRef(null);
   const optionsButtonRefs = useRef({});
   const linksButtonRefs = useRef({});
-  const scrollContainerRef = useRef(null); // Add ref for scroll container
+  const scrollContainerRef = useRef(null);
 
-  // Constants
-  const MAX_ITEMS_BEFORE_SCROLL = 7; // Changed to 7 items
-  // Selalu aktifkan scrollbar terlepas dari jumlah item
+  const MAX_ITEMS_BEFORE_SCROLL = 7;
   const shouldScroll = true;
   const MAX_LINKS_TO_SHOW = 4;
 
-  // Helper functions
   const getTypeIcon = (type) => {
     switch (type) {
       case "daily":
@@ -90,35 +85,28 @@ const ActiveProjects = ({
     return project ? project.name : "this project";
   };
 
-  // Function to calculate position with boundary detection
   const calculatePosition = (buttonRect, width, height = 150) => {
     const viewportHeight = window.innerHeight;
     const viewportWidth = window.innerWidth;
 
-    // Default position below the button
     let top = buttonRect.bottom + window.scrollY + 5;
     let left = buttonRect.right - width;
 
-    // Check if dropdown would go below viewport
     if (top + height > viewportHeight + window.scrollY) {
-      // Position above the button if there's not enough space below
       top = buttonRect.top + window.scrollY - height - 5;
     }
 
-    // Check if dropdown would go beyond right edge
     if (left + width > viewportWidth) {
-      left = viewportWidth - width - 10; // 10px padding from edge
+      left = viewportWidth - width - 10;
     }
 
-    // Check if dropdown would go beyond left edge
     if (left < 10) {
-      left = 10; // 10px padding from edge
+      left = 10;
     }
 
     return { top, left, width };
   };
 
-  // Action handler functions
   const toggleExpandLinks = (projectId) => {
     setExpandedLinkDropdowns((prev) => ({
       ...prev,
@@ -154,13 +142,11 @@ const ActiveProjects = ({
     }
   };
 
-  // Effect for updating dropdown positions
   useEffect(() => {
     if (activeDropdown && optionsButtonRefs.current[activeDropdown]) {
       const buttonRect =
         optionsButtonRefs.current[activeDropdown].getBoundingClientRect();
 
-      // Calculate position with boundary detection
       const position = calculatePosition(buttonRect, 144, 120);
       setOptionsPosition(position);
     }
@@ -173,20 +159,17 @@ const ActiveProjects = ({
           ? 300
           : 250;
 
-      // Get project to determine dropdown height
       const project = filteredProjects.find(
         (p) => p.id === activeLinksDropdown
       );
       const linksCount = project?.links?.length || 0;
-      const estimatedHeight = Math.min(linksCount * 40 + 20, 400); // 40px per item + padding
+      const estimatedHeight = Math.min(linksCount * 40 + 20, 400);
 
-      // Calculate position with boundary detection
       const position = calculatePosition(buttonRect, width, estimatedHeight);
       setLinksPosition(position);
     }
   }, [activeDropdown, activeLinksDropdown, filteredProjects]);
 
-  // Effect for click outside handling
   useEffect(() => {
     const handleClickOutside = (e) => {
       if (
@@ -233,7 +216,6 @@ const ActiveProjects = ({
     showCompleteModal,
   ]);
 
-  // Effect for creating portal containers
   useEffect(() => {
     const createPortalContainer = (id) => {
       if (!document.getElementById(id)) {
@@ -261,23 +243,18 @@ const ActiveProjects = ({
     };
   }, []);
 
-  // Effect to handle scroll locking when dropdowns are open
   useEffect(() => {
-    // Lock scrolling when any dropdown is open
     const shouldLockScroll =
       activeDropdown !== null ||
       activeLinksDropdown !== null ||
       showDeleteModal ||
       showCompleteModal;
 
-    // Set the scroll lock state
     setIsScrollLocked(shouldLockScroll);
 
     if (shouldLockScroll && scrollContainerRef.current) {
-      // Save the current scroll position
       const scrollTop = scrollContainerRef.current.scrollTop;
 
-      // Prevent scrolling on the container
       const preventScroll = (e) => {
         e.preventDefault();
         e.stopPropagation();
@@ -292,25 +269,20 @@ const ActiveProjects = ({
       });
 
       return () => {
-        // Restore scrolling when dropdown is closed
         container.style.overflow = "";
         container.removeEventListener("wheel", preventScroll);
         container.removeEventListener("touchmove", preventScroll);
-        // Restore scroll position
         container.scrollTop = scrollTop;
       };
     }
   }, [activeDropdown, activeLinksDropdown, showDeleteModal, showCompleteModal]);
 
-  // Effect untuk mempertahankan scroll state setelah perubahan data
   useEffect(() => {
-    // Pastikan scrollbar selalu muncul dan styling konsisten setelah aksi apapun
     if (scrollContainerRef.current) {
       scrollContainerRef.current.style.overflowY = "auto";
-      scrollContainerRef.current.style.maxHeight = "calc(66vh - 30px)";
+      scrollContainerRef.current.style.maxHeight = "calc(60vh - 30px)";
     }
 
-    // Jaga styling setelah modal ditutup atau perubahan data
     if (
       !showDeleteModal &&
       !showCompleteModal &&
@@ -319,7 +291,6 @@ const ActiveProjects = ({
     ) {
       setTimeout(() => {
         if (scrollContainerRef.current) {
-          // Force refresh styling container
           const currentScroll = scrollContainerRef.current.scrollTop;
           scrollContainerRef.current.style.overflow = "";
           scrollContainerRef.current.style.overflow = "auto";
@@ -335,7 +306,6 @@ const ActiveProjects = ({
     activeLinksDropdown,
   ]);
 
-  // Prepare portal contents - defined inside the component
   const optionsDropdownPortal =
     activeDropdown &&
     createPortal(
@@ -539,11 +509,8 @@ const ActiveProjects = ({
       document.getElementById("complete-modal-portal")
     );
 
-  // Main render
   return (
     <div ref={mainContainerRef} className="relative pb-8">
-      {" "}
-      {/* Added padding-bottom for counter */}
       {filteredProjects.length === 0 ? (
         <div className="flex flex-col items-center justify-center py-10 text-center">
           {projects.length === 0 ? (
@@ -568,22 +535,22 @@ const ActiveProjects = ({
         <>
           <div
             ref={scrollContainerRef}
-            className={`space-y-3 ${shouldScroll ? "scrollbar-container" : ""}`}
+            className="space-y-3 scrollbar-container"
             style={{
-              maxHeight: "calc(66vh - 30px)",
+              maxHeight: "calc(60vh - 30px)",
               overflowY: "auto",
               overflowX: "hidden",
-              paddingRight: "12px",
-              marginRight: "-8px",
+              paddingRight: "8px",
+              marginRight: "-4px",
+              WebkitOverflowScrolling: "touch",
             }}
           >
             {filteredProjects.map((project) => (
               <div
                 key={project.id}
-                className="flex items-center justify-between p-4 rounded-lg border border-gray-800 bg-gray-800/30 backdrop-blur-sm hover:bg-gray-800/50 transition-all duration-200"
+                className="flex items-center justify-between p-3 sm:p-4 rounded-lg border border-gray-800 bg-gray-800/30 backdrop-blur-sm hover:bg-gray-800/50 transition-all duration-200 overflow-visible"
               >
-                <div className="flex items-start">
-                  {/* Left side with icon and content */}
+                <div className="flex items-start min-w-0 flex-1 mr-2">
                   <div className="flex-shrink-0 w-8 h-8 mr-3 flex items-center justify-center rounded-full bg-gray-900">
                     {getTypeIcon(
                       project.types && project.types.length > 0
@@ -592,16 +559,15 @@ const ActiveProjects = ({
                     )}
                   </div>
 
-                  <div>
+                  <div className="min-w-0 flex-1">
                     <h3
-                      className={`font-medium ${
+                      className={`font-medium truncate ${
                         project.marked ? "opacity-70" : ""
                       }`}
                     >
                       {project.name}
                     </h3>
 
-                    {/* Type badges with better spacing */}
                     <div className="flex flex-wrap gap-1 mt-1">
                       {project.types && project.types.length > 0
                         ? project.types.map((type) => (
@@ -647,9 +613,7 @@ const ActiveProjects = ({
                   </div>
                 </div>
 
-                {/* Right side with action buttons */}
-                <div className="flex items-center ml-auto space-x-2">
-                  {/* Notes button */}
+                <div className="flex items-center flex-shrink-0 space-x-1 sm:space-x-2">
                   {project.notes && (
                     <button
                       onClick={() => viewProjectNotes(project)}
@@ -660,7 +624,6 @@ const ActiveProjects = ({
                     </button>
                   )}
 
-                  {/* Links button */}
                   {project.links && project.links.length > 0 && (
                     <button
                       ref={(el) => {
@@ -681,11 +644,10 @@ const ActiveProjects = ({
                     </button>
                   )}
 
-                  {/* Check button - only toggle marked/unmarked status */}
                   <button
                     onClick={() => toggleMark(project.id)}
                     className={`flex-shrink-0 flex items-center justify-center w-8 h-8 rounded-full transition-all duration-200 ${
-                      project.marked // Use marked, not completed
+                      project.marked
                         ? "bg-green-600/20 text-green-400 border border-green-500"
                         : "bg-gray-700 hover:bg-gray-600 text-gray-400 border border-gray-600"
                     }`}
@@ -694,7 +656,6 @@ const ActiveProjects = ({
                     <Check size={16} />
                   </button>
 
-                  {/* Menu dropdown */}
                   <button
                     ref={(el) => {
                       optionsButtonRefs.current[project.id] = el;
@@ -716,13 +677,11 @@ const ActiveProjects = ({
             ))}
           </div>
 
-          {/* Counter positioned absolutely at the bottom with clear space */}
           <div className="absolute bottom-0 right-0 text-sm text-gray-400 pb-1 pt-2">
             Showing {filteredProjects.length} projects
           </div>
         </>
       )}
-      {/* Render all portals directly in the return statement */}
       {optionsDropdownPortal}
       {linksDropdownPortal}
       {deleteModalPortal}

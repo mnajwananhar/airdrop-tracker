@@ -48,7 +48,6 @@ export async function initializeDatabase() {
     await connection.query(createTableQuery);
 
     connection.release();
-    console.log("Database initialized successfully");
     return true;
   } catch (error) {
     console.error("Database initialization error:", error);

@@ -57,7 +57,6 @@ export const AuthProvider = ({ children }) => {
 
       return result.user;
     } catch (error) {
-      console.error("Error login dengan Google:", error);
       throw error;
     } finally {
       setLoading(false);
@@ -73,7 +72,6 @@ export const AuthProvider = ({ children }) => {
       // Arahkan ke halaman login setelah logout
       router.push("/login");
     } catch (error) {
-      console.error("Error logout:", error);
       throw error;
     }
   };
@@ -108,7 +106,6 @@ export const AuthProvider = ({ children }) => {
       try {
         if (authUser) {
           // User telah login
-          console.log("User logged in:", authUser);
           setUser(authUser);
 
           // Update session token
@@ -116,12 +113,10 @@ export const AuthProvider = ({ children }) => {
           setSessionCookie(token);
         } else {
           // User telah logout atau belum login
-          console.log("User not logged in");
           setUser(null);
           removeSessionCookie();
         }
       } catch (error) {
-        console.error("Auth state error:", error);
         setUser(null);
         removeSessionCookie();
       } finally {
@@ -132,11 +127,6 @@ export const AuthProvider = ({ children }) => {
     // Cleanup subscription
     return () => unsubscribe();
   }, []);
-
-  // Debug: cek status session cookie
-  useEffect(() => {
-    console.log("Session cookie:", getSessionCookie());
-  }, [user]);
 
   // Nilai yang akan disediakan oleh context
   const value = {

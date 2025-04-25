@@ -34,7 +34,7 @@ export default function Loading() {
             ></path>
           </svg>
         </div>
-        <p className="text-gray-400 mt-4">Memuat aplikasi...</p>
+        <p className="text-gray-400 mt-4">Loading application...</p>
       </div>
     </div>
   );
