@@ -218,9 +218,6 @@ export default function Home() {
       setFilteredProjects(
         filteredProjects.map((p) => (p.id === projectId ? updated : p))
       );
-
-      const action = updated.marked ? "marked" : "unmarked";
-      success(`Project ${updated.name} ${action} successfully`);
     } catch (error) {
       notifyError(`Failed to update project: ${error.message}`);
       await fetchProjects();
@@ -512,8 +509,6 @@ export default function Home() {
       if (anyFailed) {
         throw new Error("One or more updates failed");
       }
-
-      success(`All project marks have been reset`);
     } catch (error) {
       notifyError(`Failed to reset all marks: ${error.message}`);
       await fetchProjects();
