@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { useAuth } from "../contexts/AuthContext";
 import { useNotification } from "../contexts/NotificationContext";
 import Header from "../components/Header";
@@ -50,18 +50,6 @@ export default function Home() {
     { value: "other", label: "Other" },
   ];
 
-  useEffect(() => {
-    if (user) {
-      fetchProjects();
-    } else {
-      setIsLoading(false);
-    }
-  }, [user]);
-
-  useEffect(() => {
-    filterProjects();
-  }, [projects, completedProjects, searchTerm, activeFilters, sortDirection]);
-
   const getAuthToken = async () => {
     if (!user) return null;
     try {
@@ -71,7 +59,8 @@ export default function Home() {
     }
   };
 
-  const fetchProjects = async () => {
+  // Make fetchProjects a useCallback to avoid unnecessary re-renders
+  const fetchProjects = useCallback(async () => {
     try {
       setIsLoading(true);
       setError(null);
@@ -111,9 +100,10 @@ export default function Home() {
     } finally {
       setIsLoading(false);
     }
-  };
+  }, []); // Empty dependency array since it doesn't depend on any state or props
 
-  const filterProjects = () => {
+  // Make filterProjects a useCallback to avoid unnecessary re-renders
+  const filterProjects = useCallback(() => {
     let filteredActive = projects.filter((project) => {
       const matchesSearch =
         searchTerm === "" ||
@@ -151,7 +141,19 @@ export default function Home() {
 
     setFilteredProjects(filteredActive);
     setFilteredCompletedProjects(filteredCompleted);
-  };
+  }, [projects, completedProjects, searchTerm, activeFilters, sortDirection]); // Add all dependencies here
+
+  useEffect(() => {
+    if (user) {
+      fetchProjects();
+    } else {
+      setIsLoading(false);
+    }
+  }, [user, fetchProjects]); // Add fetchProjects as a dependency
+
+  useEffect(() => {
+    filterProjects();
+  }, [filterProjects]); // Add filterProjects as a dependency
 
   const sortProjects = (projectsToSort) => {
     return [...projectsToSort].sort((a, b) => {
