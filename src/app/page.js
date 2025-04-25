@@ -42,11 +42,12 @@ export default function Home() {
   const [error, setError] = useState(null);
 
   const typeOptions = [
-    { value: "daily", label: "Daily Tasks" },
+    { value: "daily", label: "Daily" },
     { value: "testnet", label: "Testnet" },
     { value: "retro", label: "Retroactive" },
     { value: "node", label: "Node" },
     { value: "depin", label: "DePIN" },
+    { value: "waitlist", label: "Waitlist" },
     { value: "other", label: "Other" },
   ];
 
