@@ -46,6 +46,7 @@ const ActiveProjects = ({
   const [showCompleteModal, setShowCompleteModal] = useState(false);
   const [modalProjectId, setModalProjectId] = useState(null);
   const [isScrollLocked, setIsScrollLocked] = useState(false);
+  const [lastClickedLink, setLastClickedLink] = useState({ projectId: null, linkIndex: null });
 
   const mainContainerRef = useRef(null);
   const optionsButtonRefs = useRef({});
@@ -372,12 +373,21 @@ const ActiveProjects = ({
               }
               target="_blank"
               rel="noopener noreferrer"
-              className="flex items-center px-4 py-2 text-sm text-gray-300 hover:bg-gray-700"
+              onClick={() => setLastClickedLink({ projectId: activeLinksDropdown, linkIndex: index })}
+              className={`flex items-center px-4 py-2 text-sm hover:bg-gray-700 ${
+                lastClickedLink.projectId === activeLinksDropdown && lastClickedLink.linkIndex === index
+                ? "text-purple-300" // Different color for last clicked link
+                : "text-gray-300"
+              }`}
             >
               <span className="mr-2 truncate max-w-[200px]">{link.name}</span>
               <ExternalLink
                 size={12}
-                className="text-blue-400 ml-auto flex-shrink-0"
+                className={`ml-auto flex-shrink-0 ${
+                  lastClickedLink.projectId === activeLinksDropdown && lastClickedLink.linkIndex === index
+                  ? "text-purple-400" 
+                  : "text-blue-400"
+                }`}
               />
             </a>
           ))}
