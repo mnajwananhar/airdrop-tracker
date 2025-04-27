@@ -8,9 +8,11 @@ export function initFirebaseAdmin() {
 
     let privateKey = process.env.FIREBASE_ADMIN_PRIVATE_KEY;
     if (privateKey && !privateKey.includes("\\n")) {
+      // No need to replace if already formatted correctly
     } else if (privateKey) {
       privateKey = privateKey.replace(/\\n/g, "\n");
     } else {
+      console.error("Firebase Admin private key is missing");
       throw new Error("Firebase Admin private key is missing");
     }
 
@@ -26,15 +28,24 @@ export function initFirebaseAdmin() {
     if (!serviceAccount.privateKey) missingFields.push("privateKey");
 
     if (missingFields.length > 0) {
+      console.error(
+        `Missing service account fields: ${missingFields.join(", ")}`
+      );
       throw new Error(
         `Missing service account fields: ${missingFields.join(", ")}`
       );
     }
 
+    console.log(
+      "Initializing Firebase Admin with project ID:",
+      serviceAccount.projectId
+    );
+
     const app = initializeApp({
       credential: cert(serviceAccount),
     });
 
+    console.log("Firebase Admin initialized successfully");
     return app;
   } catch (error) {
     console.error("Firebase admin initialization error:", error);
